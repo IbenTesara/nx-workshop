@@ -3,12 +3,15 @@ import {
   formatFiles,
   generateFiles,
   getWorkspaceLayout,
+  installPackagesTask,
   names,
   offsetFromRoot,
   Tree,
 } from '@nrwl/devkit';
 import * as path from 'path';
 import { UtilLabGeneratorSchema } from './schema';
+import { libraryGenerator } from '@nrwl/workspace/generators';
+
 
 interface NormalizedSchema extends UtilLabGeneratorSchema {
   projectName: string;
@@ -48,22 +51,12 @@ function addFiles(tree: Tree, options: NormalizedSchema) {
 }
 
 export default async function( tree: Tree,options: UtilLabGeneratorSchema ) {
-  const normalizedOptions = normalizeOptions(tree, options);
-  addProjectConfiguration(
-    tree,
-    `util-${normalizedOptions.projectName}`,
-    {
-      root: normalizedOptions.projectRoot,
-      projectType: 'library',
-      sourceRoot: `${normalizedOptions.projectRoot}/src`,
-      targets: {
-        build: {
-          executor: "@bg-hoard/internal-plugin:build",
-        },
-      },
-      tags: normalizedOptions.parsedTags,
-    }
-  );
-  addFiles(tree, normalizedOptions);
+    await libraryGenerator(tree, {
+      name: `util-${ options.name }`,
+      tags: `type:util, scope:${options.directory}`
+  });
   await formatFiles(tree);
+  return () => {
+    installPackagesTask(tree);
+  };
 }
