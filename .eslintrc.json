@@ -15,6 +15,25 @@
               {
                 "sourceTag": "*",
                 "onlyDependOnLibsWithTags": ["*"]
+              },
+              {
+                "sourceTag": "scope:store",
+                "onlyDependOnLibsWithTags": [
+                  "scope:store",
+                  "scope:shared",
+                  "scope:util"
+                ]
+              },
+              {
+                "sourceTag": "scope:nx-workshop",
+                "onlyDependOnLibsWithTags": [
+                  "scope:nx-workshop",
+                  "scope:shared"
+                ]
+              },
+              {
+                "sourceTag": "type:e2e",
+                "onlyDependOnLibsWithTags": ["scope:shared"]
               }
             ]
           }
@@ -29,6 +48,11 @@
     {
       "files": ["*.js", "*.jsx"],
       "extends": ["plugin:@nrwl/nx/javascript"],
+      "rules": {}
+    },
+    {
+      "files": "*.json",
+      "parser": "jsonc-eslint-parser",
       "rules": {}
     }
   ]
